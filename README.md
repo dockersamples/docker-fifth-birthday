@@ -5,7 +5,7 @@ No matter where you are in your Docker journey, the birthday events are meant to
 # Docker 101 - Linux
 An introduction to Docker on Linux that takes you through the basics of the platform, building your first containers, and deploying them in an orchestration system. People taking the lab will come out understanding the basics of Docker and orchestration.
 
-# Docker 101 - Windows (windows containers on PWD) 
+# Docker 101 - Windows Containers
 An introduction to Docker on Windows that takes you through the basics of the platform, building your first containers, and deploying them in an orchestration system. People taking the lab will come out understanding the basics of Docker and orchestration.
 
 # Kubernetes on Docker for Mac and Docker for Windows 
