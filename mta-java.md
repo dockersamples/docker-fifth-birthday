@@ -3,10 +3,12 @@
 In this Hands-on Lab, we will show you how to take a traditional Java EE app, and compile it to run in a lightweight Java container. The app we’ve chosen is an old Java EE demo called Movie Plex 7 that was originally written to run in Wildfly 3. You can find our fork of the repo in our javaee-demo repository on GitHub. In fact, if you were to take that repository, and lift the movieplex7-1.0-SNAPSHOT file, you could run that in a Java Application Server, such as WebLogic, Wildfly, or WebSphere.
 
 # Table of Contents
-* Task 0: The Play with Docker Lab Environment
-* Task 1: Building the App in a Container
-* Task 2: Adding a New Front-end
-* Task 3: Moving from Wildfly to Tomcat EE
+* [Task 0: The Play with Docker Lab Environment](#Step-0:-The-Play-with-Docker-Lab-Environment)
+* [Task 1: Building the App in a Container](#Step-1:-Building-the-App-in-a-Container)
+* [Task 2: Adding a New Front-end](#Step-2:-Adding-a-New-Front-End)
+* [Task 3: Moving from Wildfly to Tomcat EE](#Step-3:-Moving-from-Wildfly-to-Tomcat-EE)
+* [Task 4: Push to Docker Trusted Registry](#Step-4:-Push-to-Docker-Trusted-Registry)
+* [Task 5: Deploy on Universal Control Plane with Kubernetes](#Step-5:-Deploy-on-Universal-Control-Plane-with-Kubernetes)
 
 # Step 0: The Play with Docker Lab Environment
 
@@ -192,7 +194,7 @@ docker image push  ip172-18-0-22-bahe6raubbhg0095k710.direct.ee-beta2.play-with-
 
 The images are now available to use in Universal Control Plane.
 
-# Step 5: Deploy on Universal Control Plane
+# Step 5: Deploy on Universal Control Plane with Kubernetes
 
 Click on the UCP button to launch the UCP window.
 
