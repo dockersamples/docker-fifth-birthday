@@ -84,13 +84,15 @@ The Movie Plex 7 application includes a REST interface for querying movies. This
 
 To get a separation of the new client from the existing client and server, you will deploy the React client in a separate container.
 
-To get ready, stop and remove the running container, and then change the directory from movieplex7 to the root of the project.
+To get ready, stop and remove the running container, and then change the directory from movieplex7 to the root of the project. Due to a quirk in how React is built, and the base url of the Play with Docker lab, before you build the React client you need to run a script to inject the host URL into the Dockerfile:
 
 ```
 docker container stop movieplex7
 docker container rm movieplex7
 cd ..
 more react-client/Dockerfile
+
+./add_ee_pwd_host.sh
 ```
 
 React uses Node.js to build a static site for the interface. The Dockerfile is much simpler than the one for the movieplex7 app, using a single-stage build. When it runs, it will start a simple Node server that serves the React pages, and exposes them on port 3000. We’ll deploy it in the next section.
@@ -179,7 +181,7 @@ To create a new repository click on `Repositories` on the left panel and click o
 
 ![Create repository](./mta-java/images/react_DTR.png)
 
-Push the images to DTR from the commandline:
+Push the images to DTR from the command line:
 
 ```
 docker image push ip172-18-0-22-bahe6raubbhg0095k710.direct.ee-beta2.play-with-docker.com/admin/react-client
@@ -189,3 +191,119 @@ docker image push  ip172-18-0-22-bahe6raubbhg0095k710.direct.ee-beta2.play-with-
 ![Images in DTR](./mta-java/images/dtr_images.png)
 
 The images are now available to use in Universal Control Plane.
+
+# Step 5: Deploy on Universal Control Plane
+
+Click on the UCP button to launch the UCP window.
+
+![UCP](./mta-java/images/ucp.png)
+
+Next we'll deploy the application using Kubernetes as the orchestrator. Click on `Kubernetes` on the side menu and click on `Create`.
+
+![Kubernetes screen](./mta-java/images/k8s_yaml.png)
+
+Select  `default` for Namespace and copy the yaml into the window and replace the DTR address with the URL of the DTR. Click on `Create` to deploy the application.
+
+The Kubernetes manifest defines services and deployments for each of the services that make up the voting app. Kubernetes pods are mortal and are created and destroyed as needed. Services are an abstraction of a logical set of pods and a policy for accessing them. In Deployments, the Pod is defined using a Pod Template or `.spec.template`. It has the same schema as a Pod except it is nested in the template. It defines the container(s), specifying the image used, environmental variables such as user name and password, ports and volume mounts. The Service `spec.type` is set to LoadBalancer which provisions a load balancer for the service and makes the application available outside of the cluster. In the Deployment manifest `spec.replicas` sets the number of replicas to 2 which is the same as the Docker stack file.
+
+```
+--- 
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    app: movieplex7
+  name: movieplex7
+spec: 
+  type: LoadBalancer
+  ports:
+    - name: movieplex7
+      port: 8080
+  selector: 
+    app: movieplex7
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: movieplex7
+  labels:
+    app: movieplex7
+spec:
+  selector:
+    matchLabels:
+      app: movieplex7
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: movieplex7
+    spec:
+      containers:
+      - name: movieplex7
+        image: < DTR address >/admin/movieplex7-tomee:latest
+        ports:
+        - containerPort: 8080
+          hostPort: 8080
+          name: movieplex7
+
+--- 
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    app: react-client
+  name: react-client
+spec: 
+  type: LoadBalancer
+  ports: 
+    - 
+      name: react-client
+      port: 80
+  selector: 
+    app: react-client
+
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: react-client
+  labels:
+    app: react-client
+spec:
+  selector:
+    matchLabels:
+      app: react-client
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: react-client
+    spec:
+      containers:
+      - name: react-client
+        image: < DTR address >/admin/react-client:latest
+        ports:
+        - containerPort: 80
+          hostPort: 80
+          name: react-client
+    
+```
+After kubernetes has deployed the application, the `Controllers` window shows thw deployments and services as well as the pods deployed. 
+
+![Controllers](./mta-java/images/k8s_controllers.png)
+
+Click on `Load Balancers` brings up the Load Balancer window and clicking on movieplex7 displays a detailed configuration menu that includes the external URL of the application. Note that the URL assigns a port that isn't 8080, but because the `hostPort` is set in the movieplex7 deployment, the application is also accessible through port 8080. This is important because the react-client uses a known endpoint to retrieve data from the REST interface.
+
+![Load balancer](./mta-java/images/lb_movieplex.png)
+
+Note the URL of the movieplex7 application.
+
+![Movieplex](./mta-java/images/client_movieplex.png)
+
+In the case of the react-client, port 80 is already in use by Docker Enterprise Edition and kubernetes assigns an unused port.
+
+![Load balancer](./mta-java/images/lb_react-client.png)
+
+The react-client can still send requests to the movieplex7 REST endpoint, but uses another port in its URL instead of port 80.
+
+![Movieplex](./mta-java/images/client_react.png)

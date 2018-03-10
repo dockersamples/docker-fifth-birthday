@@ -1,0 +1,80 @@
+--- 
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    app: movieplex7
+  name: movieplex7
+spec: 
+  type: LoadBalancer
+  ports:
+    - name: movieplex7
+      port: 8080
+  selector: 
+    app: movieplex7
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: movieplex7
+  labels:
+    app: movieplex7
+spec:
+  selector:
+    matchLabels:
+      app: movieplex7
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: movieplex7
+    spec:
+      containers:
+      - name: movieplex7
+        image: ip172-18-0-20-bahioqaubbhg0095k800.direct.ee-beta2.play-with-docker.com/admin/movieplex7-tomee:latest
+        ports:
+        - containerPort: 8080
+          hostPort: 8080
+          name: movieplex7
+
+--- 
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    app: react-client
+  name: react-client
+spec: 
+  type: LoadBalancer
+  ports: 
+    - 
+      name: react-client
+      port: 80
+  selector: 
+    app: react-client
+
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: react-client
+  labels:
+    app: react-client
+spec:
+  selector:
+    matchLabels:
+      app: react-client
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: react-client
+    spec:
+      containers:
+      - name: react-client
+        image: ip172-18-0-20-bahioqaubbhg0095k800.direct.ee-beta2.play-with-docker.com/admin/react-client:latest
+        ports:
+        - containerPort: 80
+          hostPort: 80
+          name: react-client
+    
