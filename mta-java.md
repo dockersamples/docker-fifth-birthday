@@ -4,12 +4,12 @@ In this Hands-on Lab, we will show you how to take a traditional Java EE app, an
 
 # Table of Contents
 
-* [Task 0: The Play with Docker Lab Environment](#Step-0-The-Play-with-Docker-Lab-Environment)
-* [Task 1: Building the App in a Container](#Step-1-Building-the-App-in-a-Container)
-* [Task 2: Adding a New Front-end](#Step-2-Adding-a-New-Front-End)
-* [Task 3: Moving from Wildfly to Tomcat EE](#Step-3-Moving-from-Wildfly-to-Tomcat-EE)
-* [Task 4: Push to Docker Trusted Registry](#Step-4-Push-to-Docker-Trusted-Registry)
-* [Task 5: Deploy on Universal Control Plane with Kubernetes](#Step-5-Deploy-on-Universal-Control-Plane-with-Kubernetes)
+* [Task 0: The Play with Docker Lab Environment](#step-0-the-play-with-docker-lab-environment)
+* [Task 1: Building the App in a Container](#step-1-building-the-app-in-a-container)
+* [Task 2: Adding a New Front-end](#step-2-adding-a-new-front-end)
+* [Task 3: Moving from Wildfly to Tomcat EE](#step-3-moving-from-wildfly-to-tomcat-ee)
+* [Task 4: Push to Docker Trusted Registry](#step-4-push-to-docker-trusted-registry)
+* [Task 5: Deploy on Universal Control Plane with Kubernetes](#step-5-deploy-on-universal-control-plane-with-kubernetes)
 
 # Step 0: The Play with Docker Lab Environment
 
