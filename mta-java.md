@@ -13,7 +13,7 @@ In this Hands-on Lab, we will show you how to take a traditional Java EE app, an
 
 # Step 0: The Play with Docker Lab Environment
 
-Start a Docker Enterprise Edition session at  [ee-beta-labs.play-with-docker.com](http://ee-beta-labs.play-with-docker.com/)
+Start a Docker Enterprise Edition session. Your workshop leader will give you a URL to start.
 
 The terminal window at the top of this web page is a Linux-based Docker host running in the Play with Docker (PWD) lab environment. This is where you will run all of the commands in this lab.
 
