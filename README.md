@@ -2,7 +2,7 @@
 
 No matter where you are in your Docker journey, the birthday events are meant to help demystify some Docker concepts and guide users along specific learning path depending on their use case and expertise level. Advanced Docker users and partners will be available on-site and act as mentors to help everyone complete the following hands-on labs.  
 
-## [Docker 101 - Linux](/linux.md)
+## [Docker 101 - Linux](https://training.play-with-docker.com/ops-stage1/)
 An introduction to Docker on Linux that takes you through the basics of the platform, building your first containers, and deploying them in an orchestration system. People taking the lab will come out understanding the basics of Docker and orchestration.
 
 ## [Docker 101 - Windows Containers](/windows.md)
