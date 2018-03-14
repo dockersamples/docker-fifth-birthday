@@ -30,7 +30,7 @@ cd ../example-voting-app
 
 ### Deploy a Docker Stack with Kubernetes
 
-Docker lets you use the simple [Docker Compose](https://docs.docker.com/compose/) file format to deploy complex applications to Kubernetes. You can deploy the wordsmith app to the local Kubernetes cluster using [docker-compose-k8s.yml](docker-compose-k8s.yml).
+Docker lets you use the simple [Docker Compose](https://docs.docker.com/compose/) file format to deploy complex applications to Kubernetes. You can deploy the wordsmith app to the local Kubernetes cluster using [docker-compose-k8s.yml](./kubernetes-desktop/docker-compose-k8s.yml).
 
 First use `docker version` to check whether Docker is running with Kubernetes or Docker Swarm as the orchestrator - Docker for Mac supports both orchestrators **at the same time**:
 
@@ -40,7 +40,7 @@ docker version -f '{{ .Client.Orchestrator }}'
 
 > You can switch orchestrators with the `DOCKER_ORCHESTRATOR` environment variable, setting it to `kubernetes` or `swarm`.
 
-Deploy the app to Kubernetes as a stack using the [compose file](docker-compose-k8s.yml):
+Deploy the app to Kubernetes as a stack using the [compose file](./kubernetes-dekstop/docker-compose-k8s.yml):
 
 ```
 export DOCKER_ORCHESTRATOR=kubernetes
@@ -116,7 +116,7 @@ Then browse to http://localhost:5000 to see the voting page and http://localhost
 
 ### Deploy Using a Kubernetes Manifest
 
-You can deploy the same app to Kubernetes using the [Kubernetes manifest](kube-deployment.yml). That describes the same application in terms of Kubernetes deployments, services and pod specifications.
+You can deploy the same app to Kubernetes using the [Kubernetes manifest](./kubernetes-desktop/kube-deployment.yml). That describes the same application in terms of Kubernetes deployments, services and pod specifications.
 
 First remove the Kubernetes stack:
 
