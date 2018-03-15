@@ -1,0 +1,4 @@
+microsoft/windowsservercore
+microsoft/nanoserver
+microsoft/aspnet
+microsoft/iis:windowsservercore
