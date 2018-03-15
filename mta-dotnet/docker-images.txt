@@ -1,0 +1,10 @@
+microsoft/mssql-server-windows-express:2016-sp1
+dockersamples/mta-dev-web-builder:3.5
+dockersamples/mta-dev-web-builder:4.7.1 
+microsoft/aspnet:3.5-windowsservercore-10.0.14393.1884
+microsoft/dotnet-framework-build:4.7.1-windowsservercore-ltsc2016
+microsoft/dotnet-framework:4.7.1-windowsservercore-10.0.14393.1884
+nats:1.0.4-nanoserver
+dockersamples/elasticsearch:5.6.0-nanoserver
+dockersamples/kibana:5.6.0-windowsservercore
+microsoft/iis:nanoserver-sac2016 
