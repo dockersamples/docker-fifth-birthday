@@ -13,10 +13,11 @@ In this Hands-on Lab, we will show you how to take a traditional Java EE app, an
 
 # Step 0: The Play with Docker Lab Environment
 
-Start a Docker Enterprise Edition session. Your workshop leader will give you a URL to start.
+This workshop is only available to people in a pre-arranged workshop during the Docker Fifth Birthday celebrations. That will likely happen through a [Docker Meetup](https://events.docker.com/chapters/), or special arrangements between Docker and your company. The workshop leader will provide you with the URL to a workshop environment that includes [Docker Enterprise Edition](https://www.docker.com/enterprise-edition). The environment will be based on [Play with Docker](https://labs.play-with-docker.com/).
 
-The terminal window at the top of this web page is a Linux-based Docker host running in the Play with Docker (PWD) lab environment. This is where you will run all of the commands in this lab.
+If none of these apply to you, contact your local [Docker Meetup Chapter](https://events.docker.com/chapters/) and ask if there are any scheduled workshops. In the meantime, you may be interested in the labs available through the [Play with Docker Classroom](training.play-with-docker.com).
 
+There are three main components to the Play With Docker (PWD) interface. 
 
 # Step 1: Building the App in a Container
 In this section of the lab, you are going to take a Java EE web app running on Wildfly, move it to Tomcat EE, and run it in a Docker container.
