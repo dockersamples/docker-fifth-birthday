@@ -15,6 +15,11 @@ After the Kubernetes cluster has started, click on the Docker icon on the menu b
 You can see the Kubernetes orchestrators available, we'll be using `docker-for-desktop`.
 ![Kubernetes orchestrators](./kubernetes-desktop/images/docker_4_desktop.png)
 
+
+## Kubernetes on Docker for Windows
+
+Follow steps [here](https://blog.docker.com/2018/01/docker-windows-desktop-now-kubernetes/) to configure Docker for windows. 
+
 ### Voting App
 
 We'll deploy the [Voting App](https://github.com/dockersamples/example-voting-app) using Kubernetes as an orchestrator. Clone the repository and copy the YAML into the Voting App repository.
