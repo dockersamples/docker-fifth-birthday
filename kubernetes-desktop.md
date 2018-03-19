@@ -22,8 +22,12 @@ We'll deploy the [Voting App](https://github.com/dockersamples/example-voting-ap
 ```
 git clone https://github.com/dockersamples/example-voting-app.git
 
-cp ./kubernetes-desktop/docker-compose-k8s.yml ../example-voting-app
-cp ./kubernetes-desktop/kube-deployment.yml ../example-voting-app
+git clone https://github.com/dockersamples/docker-fifth-birthday.git
+
+
+
+cp ./docker-fifth-birthday/kubernetes-desktop/docker-compose-k8s.yml ../../example-voting-app
+cp ./docker-fifth-birthday/kubernetes-desktop/kube-deployment.yml ../../example-voting-app
 
 cd ../example-voting-app
 ```
