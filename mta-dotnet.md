@@ -56,6 +56,11 @@ cd app
 
 docker-compose -f .\docker-compose.yml -f .\docker-compose-build.yml build
 ```
+If you get an error that compose isn't installed, type
+
+```
+choco install docker-compose
+```
 
 > Compose merges the two input files. The first specifies the structure of the app and the second adds the build details. They're kept separate because they have different concerns, and this keeps them clean.
 
@@ -96,11 +101,6 @@ When the build has finished, deploy the application using Docker Compose to the 
 ```.term1
 docker-compose up -d
 ```
-If you get an error that composr isn't installed, type
-```
-choco install docker-compose
-```
-
 
 Docker Compose will start containers for the database and the web app. The <a href="https://github.com/dockersamples/mta-netfx-dev/blob/part-1/app/docker-compose.yml" target="_blank">compose file</a> configures the services, using the database image and the application image you've just built.
 
