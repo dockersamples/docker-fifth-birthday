@@ -96,6 +96,11 @@ When the build has finished, deploy the application using Docker Compose to the 
 ```.term1
 docker-compose up -d
 ```
+If you get an error that composr isn't installed, type
+```
+choco install docker-compose
+```
+
 
 Docker Compose will start containers for the database and the web app. The <a href="https://github.com/dockersamples/mta-netfx-dev/blob/part-1/app/docker-compose.yml" target="_blank">compose file</a> configures the services, using the database image and the application image you've just built.
 
