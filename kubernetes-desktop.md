@@ -44,7 +44,7 @@ Deploy the app to Kubernetes as a stack using the [compose file](./kubernetes-de
 
 ```
 export DOCKER_ORCHESTRATOR=kubernetes
-docker stack deploy voting-app -c docker-compose.yml
+docker stack deploy voting-app -c docker-compose-k8s.yml
 ```
 
 Docker for Mac includes the [kubectl](https://kubernetes.io/docs/reference/kubectl/overview/) command line, so you can work directly with the Kube cluster. Check the services are up, and you should see output like this:
