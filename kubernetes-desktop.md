@@ -338,6 +338,7 @@ $ kubectl logs  redis-b9b45cd98-cvswq
 1:M 09 Mar 18:40:23.211 * Ready to accept connections
 ```
 
+<<<<<<< HEAD
 There are a couple of advantages with using a Docker Compose file and `docker stack deploy` to deploy your app to Kubernetes, rather than Kube manifests and `kubectl`:
 
 - Docker Compose files are simpler, which means less YAML to maintain, less for team members to learn, and lower risk of misconfiguration
@@ -361,3 +362,5 @@ To delete the whole app, you need access to the same version of the manifest tha
 ```
 $ kubectl delete -f .\kube-deployment.yml
 ```
+=======
+>>>>>>> a02fd69f6246a6e86ca348da9b9b677be853d6c4
