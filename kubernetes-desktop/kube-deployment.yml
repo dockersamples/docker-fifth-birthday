@@ -79,21 +79,9 @@ spec:
               mountPath: /var/lib/postgresql/data
       volumes:
         - name: db-data
-          persistentVolumeClaim:
-            claimName: postgres-pv-claim
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pv-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-
+          hostPath:
+            path: /tmp/postgres-data
+            type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: Service
