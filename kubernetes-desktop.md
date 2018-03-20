@@ -184,23 +184,13 @@ spec:
               mountPath: /var/lib/postgresql/data
       volumes:
         - name: db-data
-          persistentVolumeClaim:
-            claimName: postgres-pv-claim
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pv-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+          hostPath:
+            path: /tmp/postgres-data
+            type: DirectoryOrCreate
+ 
 ```
 
-The Pod is defined using a Pod Template or `.spec.template`. It has the same schema as a Pod except it is nested in the template. It defines the container(s), specifying the image used, environmental variables such as user name and password, ports and volume mounts. The spec also sets volumes for storage and in this example it uses a `PersistentVolumeClaim` which is a request for storage that can specify levels of CPU and memory resources.
+The Pod is defined using a Pod Template or `.spec.template`. It has the same schema as a Pod except it is nested in the template. It defines the container(s), specifying the image used, environmental variables such as user name and password, ports and volume mounts. The spec also sets a volume for storage and in this example it uses a `DirectoryOrCreate` which is a request for storage that will create an empty directory as needed with permission set to 0755, having the same group and ownership with Kubelet.
 
 
 Outward facing services such as the voting and results UI use a LoadBalancer to make the services accessible outside of the cluster:
