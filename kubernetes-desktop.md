@@ -39,7 +39,7 @@ cd ../example-voting-app
 
 ### Deploy a Docker Stack with Kubernetes
 
-Docker lets you use the simple [Docker Compose](https://docs.docker.com/compose/) file format to deploy complex applications to Kubernetes. You can deploy the wordsmith app to the local Kubernetes cluster using [docker-compose-k8s.yml](./kubernetes-desktop/docker-compose-k8s.yml).
+Docker lets you use the simple [Docker Compose](https://docs.docker.com/compose/) file format to deploy complex applications to Kubernetes. You can deploy the voting-app app to the local Kubernetes cluster using [docker-compose-k8s.yml](./kubernetes-desktop/docker-compose-k8s.yml).
 
 First use `docker version` to check whether Docker is running with Kubernetes or Docker Swarm as the orchestrator - Docker for Mac supports both orchestrators **at the same time**:
 
@@ -130,7 +130,7 @@ You can deploy the same app to Kubernetes using the [Kubernetes manifest](./kube
 First remove the Kubernetes stack:
 
 ```
-docker stack rm wordsmith
+docker stack rm voting-app
 ```
 
 > Alternatively You can leave the Docker stack deployment running, and create a second deployment in a new Kubernetes namespace.
@@ -249,7 +249,7 @@ The Service `spec.type` is set to LoadBalancer which provisions a load balancer 
 To deploy the voting application, first remove the Kubernetes stack:
 
 ```
-docker stack rm wordsmith
+docker stack rm voting-app
 ```
 
 > Alternatively You can leave the Docker stack deployment running, and create a second deployment in a new Kubernetes namespace.
