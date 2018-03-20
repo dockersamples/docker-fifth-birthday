@@ -21,6 +21,13 @@ The left-hand navigation lists all the nodes you can connect to. Select the Wind
 
 The Play with Docker environment is where you will run all of the commands in this lab.
 
+If you have used this environment for other labs, first remove any existing containers:
+
+```.term1
+docker container rm --force `
+  $(docker container ls --quiet --all)
+```
+
 > In this lab you'll work with the Windows node directly. Once you have a good understanding of Windows containers, you can do the [Modernizing Traditional .NET/Windows Applications](TODO) lab, which deploys a distibuted .NET application across the swarm.
 
 ## <a name="Task_1"></a>Task 1: Run some simple Windows Docker containers
@@ -192,7 +199,7 @@ ls .\MSSQL13.SQLEXPRESS\MSSQL\data
 
 The `.mdf` and `.ldf` files are stored inside the container. You can run SQL statements to store data, but when you stop and remove the container, the data is lost. 
 
-For stateful services like databases, you should store persistent data outside of the container in a Docker volume. This allows you to replace the container but retain the data. This is an advanced topic outside the scope of this lab. But you're encouraged to research Docker Volumes](https://docs.docker.com/storage/volumes/) for more information.
+For stateful services like databases, you should store persistent data outside of the container in a Docker volume. This allows you to replace the container but retain the data. This is an advanced topic outside the scope of this lab. But you're encouraged to research [Docker Volumes](https://docs.docker.com/storage/volumes/) for more information.
 
 List the processes running in the container.
 
@@ -295,9 +302,19 @@ docker container run --detach --publish 80:80 --name app `
 
 Any external traffic coming into the server on port 80 will now be directed to port 80 on the container. After a few seconds the container will start, and the website will be up and running.
 
-> [Browse to the website here](TODO)
+> Find the hostname of the Windows server in your session and browse to the app.
 
-This is a simple ASP.NET website running in a Docker container. You created the image it runs from with just two simple instructions in a Dockerfile. But it has some drawbacks. First, there are no logs - IIS stores request logs in the container filesystem, but Docker is only listening for logs on the standard output from the startup program. 
+The hostname is listed in the _Session Information_ panel:
+
+![PWD Session Information](./windows/images/windows-session.jpg)
+
+The hostname will be something like `ip10-20-2-20-bao29l5p...play-with-docker.com`. Browse to that address and you will see the hostname website - **it will take a few seconds to load** (you'll fix that in the next app):
+
+![Hostname app in a Windows container](./windows/images/hostname-app.jpg)
+
+This is a simple ASP.NET website running in a Docker container, the site just displays the server's hostname - which is actually the container ID set by Docker. 
+
+You created the image it runs from with just two simple instructions in a Dockerfile. But it has some drawbacks. First, there are no logs - IIS stores request logs in the container filesystem, but Docker is only listening for logs on the standard output from the startup program. 
 
 There's no automatic relay from the log files to the console output, so there are no HTTP access log entries in the containers:
 
@@ -346,9 +363,9 @@ cd ..\tweet-app
 docker image build --tag "$env:dockerId/tweet-app" .
 ```
 
-You'll see output on the screen as Docker runs each instruction in the Dockerfile. Once the image is built you'll see a `Successfully built...` message. It takes a while the first time, because the IIS configuration cmdlets each take a few seconds to run.
+You'll see output on the screen as Docker runs each instruction in the Dockerfile. Once the image is built you'll see a `Successfully built...` message. It takes a few minutes the first time, because the IIS configuration cmdlets each take a little while to run.
 
-If you repeat the `docker image build` command, it will complete in seconds. That's because Docker caches the [image layers](https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/) and only runs instructions if the Dockerfile has changed since the cached version.
+If you repeat the `docker image build` command, it will complete in seconds. That's because Docker caches the [image layers](https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/) and only runs instructions if the Dockerfile or the app content has changed since the cached version.
 
 Run a new web server container from the new image:
 
@@ -357,11 +374,13 @@ docker container run --detach --publish 8080:80 --name tweet-app `
   "$env:dockerId/tweet-app"
 ```
 
-The new website will be available on your Windows Docker host via port 8080.
+The new website will be available on your Windows Docker host via port `8080`. Browse to the Windows server as before - using the hostname from _Session Information_ and port `8080`:
 
-> [Browse to the website here](TODO)
+![Tweet app running in a Windows container](./windows/images/tweet-app.jpg)
 
 Feel free to hit the Tweet button, sign in and share your lab progress :)
+
+This app started fast because the Docker healthcheck had already warmed up IIS inside the container. It also relays IIS log entries to Docker, so you can run `docker container logs tweet-app` and see all the web access logs.
 
 ## Push your images to Docker Hub
 
@@ -382,10 +401,12 @@ Distribution is built into the Docker platform. You can build images locally and
 Before you can push your images, you'll need to login to Docker Hub:
 
 ```.term1
-docker login
+docker login --username $env:dockerId
 ```
 
-You will need to supply your Docker ID credentials when prompted - this is the ID you used when you signed up to Docker Hub.
+You will need to supply your Docker ID credentials when prompted - this is the password you used when you signed up to Docker Hub.
+
+> You can copy and paste the password in the terminal, but you won't see the text.
 
 Now you've logged in, you can push the images:
 
@@ -396,6 +417,6 @@ docker image push $env:dockerId/tweet-app
 
 You'll see the upload progress for each layer in the Docker image. The images upload quickly as they only add small layers on top of Microsoft's base images.
 
-You can browse to *https://hub.docker.com/r/_my-docker-Id_/* and see your newly-pushed Docker images. These are public repositories, so anyone can pull the image - you don't even need a Docker ID to pull public images. 
+You can browse to [Docker Hub](https://hub.docker.com/), login and see your newly-pushed Docker images. These are public repositories, so anyone can pull the image - you don't even need a Docker ID to pull public images. 
 
-> For production applications, you'll want to use a private registry and run your containers on a cluster of Docker servers. The [Modernizing Traditional .NET/Windows Applications](TODO) lab walks you through that using an ASP.NET web application.
+> For production applications, you'll want to use a private registry and run your containers on a cluster of Docker servers. The [Modernizing Traditional .NET/Windows Applications](mta-dotnet.md) lab walks you through that using an ASP.NET web application.

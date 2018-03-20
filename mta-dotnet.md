@@ -4,7 +4,7 @@ You can run full .NET Framework apps in Docker on Windows containers. This hands
 
 The app you'll be using is the same one from the video series [Modernizing .NET Apps for Developers](https://blog.docker.com/2018/02/video-series-modernizing-net-apps-developers/). This lab will get you experienced in using Docker to modernize traditional .NET applications, and then you can watch the video series for more in-depth walkthroughs.
 
-> If you aren't familar with the basic concepts of Docker, you can start with the [Docker Windows 101](TODO) lab before running this lab.
+> If you aren't familar with the basic concepts of Docker, you can start with the [Docker Windows 101](./windows.md) lab before running this lab.
 
 ## Table of Contents
 
@@ -26,6 +26,13 @@ The left-hand navigation lists all the nodes you can connect to. Select the Wind
 > Click in the terminal window and hit Enter to initialise the session.
 
 The Play with Docker environment is where you will run all of the commands in this lab.
+
+If you have used this environment for other labs, first remove any existing containers:
+
+```.term1
+docker container rm --force `
+  $(docker container ls --quiet --all)
+```
 
 > To start with you'll work with the Windows node directly, but at the end of the lab you'll deploy to the cluster to see how to run applications in production with Docker EE.
 
@@ -49,7 +56,13 @@ cd mta-netfx-dev
 git checkout part-1
 ```
 
-Version 1 uses containers for a SQL Server database and the ASP.NET app. You can build the Docker images for both containers using Docker Compose:
+Version 1 uses containers for a SQL Server database and the ASP.NET app. You can build the Docker images for both containers using Docker Compose. First install Compose using Chocolatey:
+
+```
+choco install -y docker-compose
+```
+
+Then change to the application directory and build the images:
 
 ```.term1
 cd app 
@@ -63,6 +76,8 @@ choco install docker-compose
 ```
 
 > Compose merges the two input files. The first specifies the structure of the app and the second adds the build details. They're kept separate because they have different concerns, and this keeps them clean.
+
+The Windows server in your lab environment doesn't have SQL Server, Visual Studio or even MSBuild installed - every step in the build process happens inside containers, using images which are packaged with the build toolchain.
 
 While the images are building, have a look at the <a href="https://github.com/dockersamples/mta-netfx-dev/blob/part-1/docker/web/Dockerfile" target="_blank">Dockerfile for the Web application</a>. You'll see there are two stages. The first stage compiles the application using MSBuild:
 
@@ -112,11 +127,11 @@ docker container ls
 
 The HTTP port for the web container is published so the app is available to the outside world.
 
-> To see the app running, browse to the Windows node hostname from the Session Information pane on the lab environment (an address like `http://ip172-18-0-11-bahdje2ubbhg0095k6s0.direct.ee-beta2.play-with-docker.com`)
+> To see the app running, browse to the Windows node hostname from the Session Information pane on the lab environment (an address like `ip172-18-0-11-bahdje2ubbhg0...play-with-docker.com`)
 
-![PWD Session Information](TODO)
+![PWD Session Information](./mta-dotnet/images/windows-session.jpg)
 
-The application is a newsletter sign-up app for Play with Docker. The home page has some basic information and link buttons. Click the _Sign Up_ button and you'll see a registration form:
+The application is a newsletter sign-up app for Play with Docker. It will take a little while to load because the app uses Entity Framework and on startup it deploys the database schema. The home page has some basic information and link buttons. Click the _Sign Up_ button and you'll see a registration form:
 
 ![PWD newsletter sign up page](./mta-dotnet/images/part-1-signup.jpg)
 
@@ -161,7 +176,11 @@ Switch to the `part-3` branch which has the new version of the app, and build it
 ```.term1
 git checkout part-3
 
-docker-compose -f .\docker-compose.yml -f .\docker-compose-local.yml -f .\docker-compose-build.yml build
+docker-compose `
+  -f .\docker-compose.yml `
+  -f .\docker-compose-local.yml `
+  -f .\docker-compose-build.yml `
+  build
 ```
 
 While it builds, have a look at the <a href="https://github.com/dockersamples/mta-netfx-dev/blob/part-3/docker/web/Dockerfile" target="_blank">new Dockerfile for the web app</a>. The app has been upgraded from ASP.NET 3.5 to ASP.NET 4.7. The builder stage runs the build steps directly in Docker rather than using a PowerShell build script:
@@ -199,14 +218,15 @@ Docker Compose also builds a console application, which is the message handler l
 When the build completes, run the new version of the app using Docker Compose:
 
 ```.term1
-docker-compose -f .\docker-compose.yml -f .\docker-compose-local.yml up -d
+docker-compose `
+  -f .\docker-compose.yml `
+  -f .\docker-compose-local.yml `
+  up -d
 ```
 
 You'll see output saying that the database container is up-to-date, and then the message queue and message handler container get created, and the web container gets recreated. Compose uses the new specification as the desired state, compares it to the running containers, and creates any containers it needs.
 
-> TODO - browse - URL ?
-
-You'll see the new homepage has been improved with an advert for DockerCon!
+The new website will be available on your same Windows Docker host. Browse to the Windows server as before - using the hostname from _Session Information_. You'll see the new homepage has been improved with an advert for DockerCon!
 
 ![Part 3 app homepage](./mta-dotnet/images/part-3-homepage.jpg)
 
@@ -217,6 +237,8 @@ Check that your new data is there in the SQL Server container:
 ```.term1
 docker container exec app_signup-db_1 powershell -Command "Invoke-SqlCmd -Query 'SELECT * FROM Prospects' -Database SignUpDb"
 ```
+
+> You'll see both sets of details you saved, because this version of the app uses the same database container as the last version.
 
 And look at the logs for the message handler - you'll see entries showing that it has received a message and saved the data:
 
@@ -241,7 +263,11 @@ Switch to the `part-5` branch and build the new version of the app using Docker 
 ```.term1
 git checkout part-5
 
-docker-compose -f .\docker-compose.yml -f .\docker-compose-local.yml  -f .\docker-compose-build.yml build
+docker-compose `
+  -f .\docker-compose.yml `
+  -f .\docker-compose-local.yml  `
+  -f .\docker-compose-build.yml `
+  build
 ```
 
 The <a href="https://github.com/dockersamples/mta-netfx-dev/blob/part-5/app/docker-compose.yml" target="_blank">compose file for part 5</a> adds one new component, a custom homepage container. The <a href="https://github.com/dockersamples/mta-netfx-dev/blob/part-5/docker/homepage/Dockerfile" target="_blank">Dockerfile for the homepage</a> is very simple:
@@ -256,18 +282,21 @@ This just packages a static HTML file on top of the `microsoft/iis` image, runni
 When the build completes, run the new version of the app using Docker Compose:
 
 ```.term1
-docker-compose -f .\docker-compose.yml -f .\docker-compose-local.yml up -d
+docker-compose `
+  -f .\docker-compose.yml `
+  -f .\docker-compose-local.yml `
+  up -d
 ```
 
 You'll see that a new homepage container gets started, and the web app container gets replaced with a new  container. 
 
 > There are some other containers started too, they're part of the [MTA .NET video series](https://blog.docker.com/2018/02/video-series-modernizing-net-apps-developers/), but you don't need to use them here.
 
-> TODO - link 
+The new version is available on your same Windows Docker host. Browse to the Windows server as before - using the hostname from _Session Information_.
 
 Now when the ASP.NET web container receives a request, it calls out to the homepage container which renders the new homepage. That new homepage is a modern UI written in Vue.js:
 
-![Part 5 app homepage](./mta-dotnet/images/part-5-homepage.jpg)
+![Part 5 app homepage](./mta-dotnet/images/part-5-homepage.JPG)
 
 If the product team don't like the new UI, they can easily replace it by building a new homepage and replacing the homepage container. The web app container doesn't need to change, so there are no regression tests to run.
 
@@ -292,21 +321,21 @@ $env:dtrDomain='<your-dtr-domain-name>'
 Now log in in to your DTR instance with your `admin` credentials:
 
 ```
-docker login "$env:dtrDomain"
+docker login "$env:dtrDomain" --username admin
 ```
 ![DTR login](./mta-dotnet/images/dtr-login.jpg)
 
 DTR is a private registry. To push images to a registry other than Docker Hub, you need to tag them with the registry's domain name. 
 
-Tag the new web application image you've built with a new name that includes the DTR domain and the `dockersamples` organization:
+Tag the new web homepage image you've built with a new name that includes the DTR domain and the `dockersamples` organization:
 
 ```
 docker image tag `
-  dockersamples/mta-dev-signup-app:v4 `
-  "$($env:dtrDomain)/dockersamples/mta-dev-signup-app:v4"
+  dockersamples/mta-dev-signup-homepage:v1 `
+  "$($env:dtrDomain)/dockersamples/mta-dev-signup-homepage:v1
 ```
 
-Next you need to create an organization to group image repositories for the images you want to store. First click on the `DTR` button the left side bar and log into DTR using the same `admin` credentials in the Session Information panel (ignore the security warnings - the lab environment uses self-signed HTTPS certificates).
+Next you need to create an organization to group image repositories for the images you want to store. First click on the `DTR` button the left side bar and log into DTR using the same `admin` credentials in the Session Information panel (**ignore the security warnings - the lab environment uses self-signed HTTPS certificates**).
 
 Click on the _Organizations_ link on the left-hand navigation, and then the _New organization_ button:
 
@@ -320,7 +349,7 @@ Save the organization, then click on the `dockersamples` organization and browse
 
 ![DTR - repository page](./mta-dotnet/images/dtr-new-repo.jpg)
 
-Click the _Add repository_ button and create a repository called `mta-dev-signup-app` with the default settings:
+Click the _Add repository_ button and create a repository called `mta-dev-signup-homepage` with the default settings:
 
 ![DTR - repository page](./mta-dotnet/images/dtr-new-repo-2.jpg)
 
@@ -330,10 +359,10 @@ Images with your DTR domain in the tag will be pushed to your registry. Switch b
 
 ```
 docker image push `
-  "$($env:dtrDomain)/dockersamples/mta-dev-signup-app:v4"
+  "$($env:dtrDomain)/dockersamples/mta-dev-signup-homepage:v1"
 ```
 
-The push takes a while because it's uploading all the image layers with the ASP.NET stack, as well as the application layers. **You can move on to the next step while it's uploading**.
+The push uploads all the image layers except the base Windows Server layer, which is always served from Docker Hub.
 
 When the push completes you can see the image in DTR in the _Images_ tab of the _Repository_ windows:
 
@@ -370,7 +399,7 @@ The application image in DTR is private, only authenticated users can access it.
 Enter your user credentials and the image name **including your full DTR domain**, so in my case I enter:
 
 ```
-ip172-18-0-7-bal0p3lvrilg00de1gb0.direct.beta-hybrid.play-with-docker.com/dockersamples/mta-dev-signup-app:v4
+ip172-18-0-12-bao29l5plqdg00dpiv60.direct.beta-hybrid.play-with-docker.com/dockersamples/mta-dev-signup-homepage:v1
 ```
 ![Pulling DTR image in UCP](./mta-dotnet/images/ucp-pull-image-2.jpg)
 
@@ -390,17 +419,17 @@ You can upload a Docker Compose YAML file, or paste in the contents. You'll need
 
 Open the [compose file](./mta-dotnet/docker-stack.yml) and copy the contents to the clipboard. Then paste the YAML into the UCP _Ceate Stack_ and update the image name for the app service.
 
-The YAMl starts like this:
+The YAML starts like this:
 
 ```
 version: '3.3'
 services:
 
-  signup-app:
-    image: <your-dtr-domain>/dockersamples/mta-dev-signup-app:v4
+  signup-homepage:
+    image: <your-dtr-domain>/mta-dev-signup-homepage:v1
 ```
 
-And you need to replace `<your-dtr-domain>` with your actual DTR domain, so the image name matches the image you pulled from DTR:
+You will need to replace `<your-dtr-domain>` with your actual DTR domain, so the image name matches the image you pulled from DTR:
 
 ![Create the stack in UCP](./mta-dotnet/images/ucp-create-stack-2.jpg)
 
@@ -414,6 +443,6 @@ Soon all the services will be running at 100%:
 
 ![Stack services running](./mta-dotnet/images/ucp-services-running.jpg)
 
-> TODO - browse to the app
+The new version is available on your same Windows Docker host. Browse to the Windows server as before - using the hostname from _Session Information_.
 
 Here there are 9 containers running as swarm services for my application, and with Docker EE yo can also run Linux containers as a Kubernetes stack. You use DTR to ship, scan and sign all your images, and UCP to manage all your apps - a consistent platform for any type of application.
