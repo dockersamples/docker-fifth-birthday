@@ -63,7 +63,7 @@ On Docker for Windows run:
 $env:DOCKER_ORCHESTRATOR='kubernetes'
 ```
 
-Deploy the app to Kubernetes as a stack using the [compose file](./kubernetes-dekstop/docker-compose-k8s.yml):
+Deploy the app to Kubernetes as a stack using the [compose file](./kubernetes-desktop/docker-compose-k8s.yml):
 
 ```
 docker stack deploy voting-app -c docker-compose-k8s.yml
