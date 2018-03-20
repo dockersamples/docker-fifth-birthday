@@ -260,7 +260,7 @@ Now apply the manifest using `kubectl`:
 $ kubectl apply -f kube-deployment.yml
 ```
 
-Now browse to http://localhost:8081 and you will see the same site.
+Now browse to http://localhost:5000 and you will see the same site.
 
 To see the status of the deployments, services, and pods:
 
