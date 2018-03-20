@@ -32,8 +32,6 @@ git clone https://github.com/dockersamples/example-voting-app.git
 
 git clone https://github.com/dockersamples/docker-fifth-birthday.git
 
-
-
 cp ./docker-fifth-birthday/kubernetes-desktop/docker-compose-k8s.yml ./example-voting-app
 
 cp ./docker-fifth-birthday/kubernetes-desktop/kube-deployment.yml ./example-voting-app
@@ -106,7 +104,9 @@ vote-85fff44486-hplj9         1/1       Running   0          2m
 worker-67ddbf6bf4-zx7hn       1/1       Running   2          2m
 ```
 
-The docker-compose stack file for kubernetes is simple file that defines the services.
+> Browse to http://localhost:5000 to see the voting page and http://localhost:5001 to see the results, served by Docker containers running in Kubernetes.
+
+The Docker Compose stack file that you used to deploy the app to Kubernetes is a simple file that defines the services.
 
 ```
 version: '3.3'
@@ -137,8 +137,6 @@ services:
     ports:
       - "8080:8080
 ```
-
-Then browse to http://localhost:5000 to see the voting page and http://localhost:5001 to see the results.
 
 ### Deploy Using a Kubernetes Manifest
 
@@ -257,7 +255,7 @@ Now apply the manifest using `kubectl`:
 $ kubectl apply -f kube-deployment.yml
 ```
 
-Now browse to http://localhost:5000 and you will see the same site.
+> Now browse to http://localhost:5000 and http://localhost:5001 you will see the same application.
 
 To see the status of the deployments, services, and pods:
 
@@ -339,5 +337,3 @@ $ kubectl logs  redis-b9b45cd98-cvswq
 1:M 09 Mar 18:40:23.211 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
 1:M 09 Mar 18:40:23.211 * Ready to accept connections
 ```
-
-Browse to http://localhost:5000 to see the voting page and http://localhost:5001 to see the results.
