@@ -11,7 +11,7 @@ In this lab we'll help you get familiar with running Docker on Windows. We'll lo
 
 ## <a name="0"></a>Step 0: The Play with Docker Lab Environment
 
-Start a Docker Enterprise Edition session at  [ee-beta-labs.play-with-docker.com](http://ee-beta-labs.play-with-docker.com/). This is a hybrid cluster, with Linux and Windows nodes.
+Start a Docker Enterprise Edition session at the URL provided by your workshop organizer. This is a hybrid cluster, with Linux and Windows nodes.
 
 The left-hand navigation lists all the nodes you can connect to. Select the Windows node - the name will start with `win0000` - and the terminal window in the right-hand pane connects to a PowerShell session on the Windows node:
 
