@@ -333,4 +333,4 @@ $ kubectl logs  redis-b9b45cd98-cvswq
 1:M 09 Mar 18:40:23.211 * Ready to accept connections
 ```
 
-Browse to http://localhost:5000 to see the voting page and http://localhost:5000=1 to see the results.
+Browse to http://localhost:5000 to see the voting page and http://localhost:5001 to see the results.
