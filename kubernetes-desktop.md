@@ -337,3 +337,4 @@ $ kubectl logs  redis-b9b45cd98-cvswq
 1:M 09 Mar 18:40:23.211 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
 1:M 09 Mar 18:40:23.211 * Ready to accept connections
 ```
+
