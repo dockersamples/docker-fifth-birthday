@@ -359,6 +359,6 @@ worker    1         1         1            1           8m
 To delete the whole app, you need access to the same version of the manifest that you used to deploy the app:
 
 ```
-$ kubectl delete -f .\kube-deployment.yml
+$ kubectl delete -f ./kube-deployment.yml
 ```
 
