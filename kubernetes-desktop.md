@@ -2,7 +2,7 @@
 
 ## Kubernetes on Docker for Mac
 
-Docker includes Kubernetes as an orchestrator in the [Edge version](https://store.docker.com/editions/community/docker-ce-desktop-mac) of Docker Community Edition for Mac. Download Docker CE and install. When installation is completed, click the Docker icon on the Menu Bar and select `Preferences` Click on the Kubernetes icon. 
+Docker includes Kubernetes as an orchestrator in the [Edge version](https://store.docker.com/editions/community/docker-ce-desktop-mac) of Docker Community Edition for Mac. Download Docker CE and install. When installation is completed, click the Docker icon on the Menu Bar and select `Preferences` Click on the Kubernetes icon.
 ![Docker Preferences](./kubernetes-desktop/images/docker_prefs.png)
 
 In the Kubernetes panel check `Enable Kubernetes` to start a single node Kubernetes cluster.
@@ -15,10 +15,13 @@ After the Kubernetes cluster has started, click on the Docker icon on the menu b
 You can see the Kubernetes orchestrators available, we'll be using `docker-for-desktop`.
 ![Kubernetes orchestrators](./kubernetes-desktop/images/docker_4_desktop.png)
 
-
 ## Kubernetes on Docker for Windows
 
-Follow steps [here](https://blog.docker.com/2018/01/docker-windows-desktop-now-kubernetes/) to configure Docker for windows. 
+On Windows you need to make sure you are in **Linux containers** mode ([learn how to switch between Linux and Windows containers](https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers)).
+
+Then open _Settings_ from the whale tray icon, click _Kubernetes_ and select _Enable Kubernetes_:
+
+![Kubernetes on Docker for Windows](./kubernetes-desktop/images/d4w-kube.JPG)
 
 ### Voting App
 
@@ -31,10 +34,11 @@ git clone https://github.com/dockersamples/docker-fifth-birthday.git
 
 
 
-cp ./docker-fifth-birthday/kubernetes-desktop/docker-compose-k8s.yml ../../example-voting-app
-cp ./docker-fifth-birthday/kubernetes-desktop/kube-deployment.yml ../../example-voting-app
+cp ./docker-fifth-birthday/kubernetes-desktop/docker-compose-k8s.yml ./example-voting-app
 
-cd ../example-voting-app
+cp ./docker-fifth-birthday/kubernetes-desktop/kube-deployment.yml ./example-voting-app
+
+cd ./example-voting-app
 ```
 
 ### Deploy a Docker Stack with Kubernetes
@@ -49,14 +53,27 @@ docker version -f '{{ .Client.Orchestrator }}'
 
 > You can switch orchestrators with the `DOCKER_ORCHESTRATOR` environment variable, setting it to `kubernetes` or `swarm`.
 
-Deploy the app to Kubernetes as a stack using the [compose file](./kubernetes-dekstop/docker-compose-k8s.yml):
+To switch to Kubernetes using Docker for Mac, run:
 
 ```
 export DOCKER_ORCHESTRATOR=kubernetes
+```
+
+On Docker for Windows run:
+
+```
+$env:DOCKER_ORCHESTRATOR='kubernetes'
+```
+
+Deploy the app to Kubernetes as a stack using the [compose file](./kubernetes-dekstop/docker-compose-k8s.yml):
+
+```
 docker stack deploy voting-app -c docker-compose-k8s.yml
 ```
 
-Docker for Mac includes the [kubectl](https://kubernetes.io/docs/reference/kubectl/overview/) command line, so you can work directly with the Kube cluster. Check the services are up, and you should see output like this:
+This pulls all the Docker images for the sample app, so it will take a few moments. The Docker command line logs progress so you can see services starting. When the stack is running you will see the message `Stack voting-app is stable and running`.
+
+Docker for Mac and Docker for Windows include the [kubectl](https://kubernetes.io/docs/reference/kubectl/overview/) command line, so you can work directly with the Kube cluster. Check the services are up, and you should see output like this:
 
 ```
 $ kubectl get svc
@@ -75,7 +92,7 @@ vote-published         LoadBalancer   10.103.12.30     localhost     5000:30644/
 worker                 ClusterIP      None             <none>        55555/TCP        1m
 ```
 
-Check the pods are running, and you should see one pod each for the database and web components, and five pods for the words API - which is specified as the replica count in the compose file:
+Check the pods are running, and you should see one pod each for each component in the application:
 
 ```
 $ kubectl get pods
@@ -117,46 +134,39 @@ services:
     image: dockersamples/examplevotingapp_worker
   visualizer:
     image: dockersamples/visualizer:stable
-    ports: 
+    ports:
       - "8080:8080
 ```
 
-Then browse to http://localhost:5000 to see the voting page and http://localhost:5001 to see the results. 
+Then browse to http://localhost:5000 to see the voting page and http://localhost:5001 to see the results.
 
 ### Deploy Using a Kubernetes Manifest
 
 You can deploy the same app to Kubernetes using the [Kubernetes manifest](./kubernetes-desktop/kube-deployment.yml). That describes the same application in terms of Kubernetes deployments, services and pod specifications.
-
-First remove the Kubernetes stack:
-
-```
-docker stack rm voting-app
-```
-
-> Alternatively You can leave the Docker stack deployment running, and create a second deployment in a new Kubernetes namespace.
 
 The Kubernetes manifest defines services and deployments for each of the services that make up the voting app. Kubernetes pods are mortal and are created and destroyed as needed. Services are an abstraction of a logical set of pods and a policy for accessing them. Let's take a look at the service defined for the database in the voting app.
 
 ```
 apiVersion: v1
 kind: Service
-metadata: 
-  labels: 
+metadata:
+  labels:
     app: db
   name: db
-spec: 
+spec:
   clusterIP: None
-  ports: 
-    - 
+  ports:
+    -
       name: db
       port: 5432
       targetPort: 5432
-  selector: 
+  selector:
     app: db
 ```
-Of note is that the database service is a headless service set by `clusterIp: None` in the spec, where the DNS is configured to return multiple address for the Service name that point directly to the Pods that back in the service. 
 
-The database Deployment declares the desired state of the pod backing the Service. 
+Of note is that the database service is a headless service set by `clusterIp: None` in the spec, where the DNS is configured to return multiple address for the Service name that point directly to the Pods that back in the service.
+
+The database Deployment declares the desired state of the pod backing the Service.
 
 ```
 apiVersion: apps/v1beta1
@@ -170,7 +180,7 @@ spec:
         app: db
     spec:
       containers:
-        - 
+        -
           name: db
           image: postgres:9.4
           env:
@@ -187,11 +197,9 @@ spec:
           hostPath:
             path: /tmp/postgres-data
             type: DirectoryOrCreate
- 
 ```
 
-The Pod is defined using a Pod Template or `.spec.template`. It has the same schema as a Pod except it is nested in the template. It defines the container(s), specifying the image used, environmental variables such as user name and password, ports and volume mounts. The spec also sets a volume for storage and in this example it uses a `DirectoryOrCreate` which is a request for storage that will create an empty directory as needed with permission set to 0755, having the same group and ownership with Kubelet.
-
+The Pod is defined using a Pod Template or `.spec.template`. It has the same schema as a Pod except it is nested in the template. It defines the container(s), specifying the image used, environmental variables such as user name and password, ports and volume mounts. The spec also sets volumes for storage and in this example it uses a `PersistentVolumeClaim` which is a request for storage that can specify levels of CPU and memory resources.
 
 Outward facing services such as the voting and results UI use a LoadBalancer to make the services accessible outside of the cluster:
 
@@ -228,13 +236,12 @@ spec:
         - name: vote
           image: dockersamples/examplevotingapp_vote:before
           ports:
-            - 
+            -
               containerPort: 80
               name: vote
 ```
 
 The Service `spec.type` is set to LoadBalancer which provisions a load balancer for the service. In the Deployment manifest `spec.replicas` sets the number of replicas to 2 which is the same as the Docker stack file.
-
 
 To deploy the voting application, first remove the Kubernetes stack:
 
@@ -242,7 +249,7 @@ To deploy the voting application, first remove the Kubernetes stack:
 docker stack rm voting-app
 ```
 
-> Alternatively You can leave the Docker stack deployment running, and create a second deployment in a new Kubernetes namespace.
+> Alternatively You can leave the Docker stack deployment running, and create a second deployment in a new Kubernetes namespace, but you'll need to change the ports used by the app.
 
 Now apply the manifest using `kubectl`:
 
@@ -333,4 +340,4 @@ $ kubectl logs  redis-b9b45cd98-cvswq
 1:M 09 Mar 18:40:23.211 * Ready to accept connections
 ```
 
-Browse to http://localhost:5000 to see the voting page and http://localhost:5000=1 to see the results.
+Browse to http://localhost:5000 to see the voting page and http://localhost:5001 to see the results.
