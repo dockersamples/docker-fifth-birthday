@@ -121,7 +121,7 @@ services:
       - "8080:8080
 ```
 
-Then browse to http://localhost:5000 to see the voting page and http://localhost:5000=1 to see the results. 
+Then browse to http://localhost:5000 to see the voting page and http://localhost:5001 to see the results. 
 
 ### Deploy Using a Kubernetes Manifest
 
