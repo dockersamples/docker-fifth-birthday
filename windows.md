@@ -84,6 +84,7 @@ The options to the `docker container run` command change how Docker manages the 
 * `powershell` is the process to start inside the container.
 
 When the container starts, you'll drop into a PowerShell session with the default PowerShell prompt `PS C:\>`. Docker has attached to the console in the container, relaying input and output between your PowerShell session on your Windows Docker host, and the PowerShell session in the container.
+> The PowerShell session is now inside the container!
 
 You can run any normal PowerShell cmdlets inside the Windows container. `ls C:\` lists the contents of the container's C: drive. You can see this is a minimal installation of Windows.
 
@@ -102,6 +103,8 @@ ls C:\
 ```.term1
 Get-WindowsFeature
 ```
+
+> So this is pretty much a normal headless Windows server environment, but it's running in a container which makes it very efficient on CPU, disk and memory.
 
 Type ```exit``` to quit the PowerShell session. This will terminate the container's main process (`powershell`), causing the container to exit, and returning you to the server terminal:
 
@@ -226,7 +229,8 @@ exit
 Clean up by removing all containers.
 
 ```.term1
-docker container rm --force $(docker container ls --quiet --all)
+docker container rm --force `
+  $(docker container ls --quiet --all)
 ```
 
 ## <a name="2"></a>Task 3: Package and run a custom app using Docker
@@ -241,7 +245,8 @@ The Dockerfile syntax is straightforward. In this task you'll walk through two D
 Start by cloning a GitHub repo that contains the sample applications:
 
 ```
-git clone https://github.com/dockersamples/docker101-windows.git
+git clone `
+  https://github.com/dockersamples/docker101-windows.git
 
 cd docker101-windows
 ```
