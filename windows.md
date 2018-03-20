@@ -21,6 +21,13 @@ The left-hand navigation lists all the nodes you can connect to. Select the Wind
 
 The Play with Docker environment is where you will run all of the commands in this lab.
 
+If you have used this environment for other labs, first remove any existing containers:
+
+```.term1
+docker container rm --force `
+  $(docker container ls --quiet --all)
+```
+
 > In this lab you'll work with the Windows node directly. Once you have a good understanding of Windows containers, you can do the [Modernizing Traditional .NET/Windows Applications](TODO) lab, which deploys a distibuted .NET application across the swarm.
 
 ## <a name="Task_1"></a>Task 1: Run some simple Windows Docker containers
