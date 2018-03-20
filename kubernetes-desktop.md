@@ -337,3 +337,27 @@ $ kubectl logs  redis-b9b45cd98-cvswq
 1:M 09 Mar 18:40:23.211 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
 1:M 09 Mar 18:40:23.211 * Ready to accept connections
 ```
+
+There are a couple of advantages with using a Docker Compose file and `docker stack deploy` to deploy your app to Kubernetes, rather than Kube manifests and `kubectl`:
+
+- Docker Compose files are simpler, which means less YAML to maintain, less for team members to learn, and lower risk of misconfiguration
+- You can use the same artifacts in every environment - devs can run Docker without Kubernetes, and deploy with Docker Compose using the same manifest that the ops team use to deploy to Kubernetes in production ([Docker Compose override files](https://docs.docker.com/compose/extends/) really help with this)
+- Stacks are a high-level resource that group multiple components in a distributed solution.
+
+Run `kubectl get deployments` and you'll see all the deployed components but there's no indication they're all part of one application:
+
+```
+$ kubectl get deployments
+NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+db        1         1         1            1           8m
+redis     1         1         1            1           8m
+result    1         1         1            1           8m
+vote      2         2         2            2           8m
+worker    1         1         1            1           8m
+```
+
+To delete the whole app, you need access to the same version of the manifest that you used to deploy the app:
+
+```
+$ kubectl delete -f .\kube-deployment.yml
+```
