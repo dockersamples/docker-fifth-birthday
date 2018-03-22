@@ -201,7 +201,7 @@ The images are now available to use in Universal Control Plane.
 In this section, we'll deploy in Docker EE with Kubernetes as an orchestrator. Before we do this, we'll need to add container that proxies between the cluster and the host. This is necessary because the react-client sends requests to the host IP address at port 8080, the default Tomcat port. There are other ways to expose ports and set external addresses, but they are beyond the scope of the tutorial.
 
 
-Create the repository in DTR with the image name `proxy-to-service` To build the proxy:
+Create the repository in DTR with the image name `proxy-to-service` To build the proxy (replace with the current Docker EE DTR Play With Docker address):
 ```
 cd proxy-to-service
 docker image build -t ip172-18-0-5-bapf90ugera000cfavdg.direct.beta-hybrid.play-with-docker.com/admin/proxy-to-service:v2 .
@@ -237,7 +237,7 @@ spec:
       protocol: TCP
       containerPort: 8080
       hostPort: 8080
-      
+
 --- 
 apiVersion: v1
 kind: Service
