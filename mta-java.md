@@ -198,6 +198,17 @@ The images are now available to use in Universal Control Plane.
 
 # Step 5: Deploy on Universal Control Plane with Kubernetes
 
+In this section, we'll deploy in Docker EE with Kubernetes as an orchestrator. Before we do this, we'll need to add container that proxies between the cluster and the host. This is necessary because the react-client sends requests to the host IP address at port 8080, the default Tomcat port. There are other ways to expose ports and set external addresses, but they are beyond the scope of the tutorial.
+
+
+Create the repository in DTR with the image name `proxy-to-service` To build the proxy:
+```
+cd proxy-to-service
+docker image build -t ip172-18-0-5-bapf90ugera000cfavdg.direct.beta-hybrid.play-with-docker.com/admin/proxy-to-service:v2 .
+docker push ip172-18-0-5-bapf90ugera000cfavdg.direct.beta-hybrid.play-with-docker.com/admin/proxy-to-service:v2
+
+```
+
 Click on the UCP button to launch the UCP window.
 
 ![UCP](./mta-java/images/ucp.png)
@@ -211,6 +222,22 @@ Select  `default` for Namespace and copy the yaml into the window and replace th
 The Kubernetes manifest defines services and deployments for each of the services that make up the voting app. Kubernetes pods are mortal and are created and destroyed as needed. Services are an abstraction of a logical set of pods and a policy for accessing them. In Deployments, the Pod is defined using a Pod Template or `.spec.template`. It has the same schema as a Pod except it is nested in the template. It defines the container(s), specifying the image used, environmental variables such as user name and password, ports and volume mounts. The Service `spec.type` is set to LoadBalancer which provisions a load balancer for the service and makes the application available outside of the cluster. In the Deployment manifest `spec.replicas` sets the number of replicas to 2 which is the same as the Docker stack file.
 
 ```
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dns-proxy
+spec:
+  containers:
+  - name: proxy-tcp
+    image: ip172-18-0-5-bapf90ugera000cfavdg.direct.beta-hybrid.play-with-docker.com/admin/proxy-to-service:v2
+    args: [ "tcp", "8080", "kube-dns.default" ]
+    ports:
+    - name: tcp
+      protocol: TCP
+      containerPort: 8080
+      hostPort: 8080
+      
 --- 
 apiVersion: v1
 kind: Service

@@ -1,3 +1,19 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dns-proxy
+spec:
+  containers:
+  - name: proxy-tcp
+    image: ip172-18-0-5-bapf90ugera000cfavdg.direct.beta-hybrid.play-with-docker.com/admin/proxy-to-service:v2
+    args: [ "tcp", "8080", "kube-dns.default" ]
+    ports:
+    - name: tcp
+      protocol: TCP
+      containerPort: 8080
+      hostPort: 8080
+
 --- 
 apiVersion: v1
 kind: Service
@@ -10,6 +26,7 @@ spec:
   ports:
     - name: movieplex7
       port: 8080
+      targetPort: 8080
   selector: 
     app: movieplex7
 ---
@@ -35,7 +52,7 @@ spec:
         ports:
         - containerPort: 8080
           hostPort: 8080
-          name: movieplex7
+          
 
 --- 
 apiVersion: v1
