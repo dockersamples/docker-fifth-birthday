@@ -152,7 +152,7 @@ You now have two Dockerfiles, one to build the Java Movie Plex 7 application and
 
 ```
 cd movieplex7
-docker image build -t movieplex-tomee .
+docker image build -t movieplex7-tomee .
 
 cd ../react-client
 docker image build -t react-client .
