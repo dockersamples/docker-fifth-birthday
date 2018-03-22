@@ -332,7 +332,7 @@ Tag the new web homepage image you've built with a new name that includes the DT
 ```
 docker image tag `
   dockersamples/mta-dev-signup-homepage:v1 `
-  "$($env:dtrDomain)/dockersamples/mta-dev-signup-homepage:v1
+  "$($env:dtrDomain)/dockersamples/mta-dev-signup-homepage:v1"
 ```
 
 Next you need to create an organization to group image repositories for the images you want to store. First click on the `DTR` button the left side bar and log into DTR using the same `admin` credentials in the Session Information panel (**ignore the security warnings - the lab environment uses self-signed HTTPS certificates**).
