@@ -103,7 +103,7 @@ React uses Node.js to build a static site for the interface. The Dockerfile is m
 
 ```
 FROM node:latest
-ENV API_HOST=pwd10-0-16-3-8080.host4.labs.play-with-docker.com
+ENV API_HOST=ip172-18-0-7-bapfmbugera000cfb1cg.direct.beta-hybrid.play-with-docker.com:30080
 WORKDIR /usr/src/react-client
 COPY . .
 RUN npm install
@@ -111,6 +111,8 @@ RUN npm run build
 EXPOSE 3000
 CMD ["npm", "run", "start"]
 ```
+
+**Important:** make sure that there is only one API_HOST set, and its value is the base url of the Play with Docker lab!
 
 # Step 3: Moving from Wildfly to Tomcat EE
 
@@ -223,6 +225,7 @@ spec:
   ports:
     - name: movieplex7
       port: 8080
+      nodePort: 30800
   selector: 
     app: movieplex7
 ---
