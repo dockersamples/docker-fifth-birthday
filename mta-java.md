@@ -17,7 +17,7 @@ This workshop is only available to people in a pre-arranged workshop during the 
 
 If none of these apply to you, contact your local [Docker Meetup Chapter](https://events.docker.com/chapters/) and ask if there are any scheduled workshops. In the meantime, you may be interested in the labs available through the [Play with Docker Classroom](https://training.play-with-docker.com).
 
-There are three main components to the Play With Docker (PWD) interface. 
+There are three main components to the Play With Docker (PWD) interface.
 
 # Step 1: Building the App in a Container
 In this section of the lab, you are going to take a Java EE web app running on Wildfly, move it to Tomcat EE, and run it in a Docker container.
