@@ -13,9 +13,9 @@ In this Hands-on Lab, we will show you how to take a traditional Java EE app, an
 
 # Step 0: The Play with Docker Lab Environment
 
-This workshop is only available to people in a pre-arranged workshop during the Docker Fifth Birthday celebrations. That will likely happen through a [Docker Meetup](https://events.docker.com/chapters/), or special arrangements between Docker and your company. The workshop leader will provide you with the URL to a workshop environment that includes [Docker Enterprise Edition](https://www.docker.com/enterprise-edition). The environment will be based on [Play with Docker](https://labs.play-with-docker.com/).
+This workshop is only available to people in a pre-arranged workshop during the Docker Fifth Birthday celebrations. That will likely happen through a [Docker Meetup](https://events.docker.com/chapters/), or special arrangements between Docker and your company. The workshop leader will provide you with the URL to a workshop environment that includes [Docker Enterprise Edition](https://www.docker.com/enterprise-edition).
 
-If none of these apply to you, contact your local [Docker Meetup Chapter](https://events.docker.com/chapters/) and ask if there are any scheduled workshops. In the meantime, you may be interested in the labs available through the [Play with Docker Classroom](training.play-with-docker.com).
+If none of these apply to you, contact your local [Docker Meetup Chapter](https://events.docker.com/chapters/) and ask if there are any scheduled workshops. In the meantime, you may be interested in the labs available through the [Play with Docker Classroom](https://training.play-with-docker.com).
 
 There are three main components to the Play With Docker (PWD) interface. 
 
@@ -152,7 +152,7 @@ You now have two Dockerfiles, one to build the Java Movie Plex 7 application and
 
 ```
 cd movieplex7
-docker image build -t movieplex-tomee .
+docker image build -t movieplex7-tomee .
 
 cd ../react-client
 docker image build -t react-client .

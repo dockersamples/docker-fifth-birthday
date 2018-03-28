@@ -332,7 +332,7 @@ Tag the new web homepage image you've built with a new name that includes the DT
 ```
 docker image tag `
   dockersamples/mta-dev-signup-homepage:v1 `
-  "$($env:dtrDomain)/dockersamples/mta-dev-signup-homepage:v1
+  "$($env:dtrDomain)/dockersamples/mta-dev-signup-homepage:v1"
 ```
 
 Next you need to create an organization to group image repositories for the images you want to store. First click on the `DTR` button the left side bar and log into DTR using the same `admin` credentials in the Session Information panel (**ignore the security warnings - the lab environment uses self-signed HTTPS certificates**).
@@ -372,7 +372,7 @@ The web image is now stored in a private registry with rich access controls, and
 
 > In production projects this step would be done by the CI process. In this lab you've just pushed one image to see how DTR works. The other images for the lab are all publicly available on Docker Hub.
 
-# Step 5: Deploy on Universal Control Plane
+## <a name="5"></a> Step 5: Deploy on Universal Control Plane
 
 Your lab environment has a Docker EE cluster set up, but the Windows node is not yet part of the cluster. Open the terminal window for the `manager1` node and get the join token for adding new nodes to the swarm:
 
