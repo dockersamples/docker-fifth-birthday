@@ -10,7 +10,7 @@ spec:
   ports:
     - name: movieplex7
       port: 8080
-      nodePort: 30080
+      nodePort: 30088
   selector: 
     app: movieplex7
 ---
@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: movieplex7
-        image: ip172-18-0-20-bahioqaubbhg0095k800.direct.ee-beta2.play-with-docker.com/admin/movieplex7-tomee:latest
+        image: <DTR HOSTNAME>/admin/movieplex7-tomee:latest
         ports:
         - containerPort: 8080
           
@@ -45,14 +45,14 @@ metadata:
     app: react-client
   name: react-client
 spec: 
-  type: LoadBalancer
+  type: NodePort
   ports: 
     - 
       name: react-client
       port: 80
+      nodePort: 30080
   selector: 
     app: react-client
-
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
@@ -72,9 +72,11 @@ spec:
     spec:
       containers:
       - name: react-client
-        image: ip172-18-0-20-bahioqaubbhg0095k800.direct.ee-beta2.play-with-docker.com/admin/react-client:latest
+        image: <DTR HOSTNAME>/admin/react-client:latest
+        env:
+        - name: API_HOST
+          value: <UCP HOSTNAME>:30088
         ports:
         - containerPort: 80
-          hostPort: 80
           name: react-client
     
