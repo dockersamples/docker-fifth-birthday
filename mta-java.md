@@ -96,7 +96,7 @@ docker container rm movieplex7
 cd ..
 more react-client/Dockerfile
 
-./add_ee_pwd_host.sh
+./add_ee_kube_pwd_host.sh
 ```
 
 React uses Node.js to build a static site for the interface. The Dockerfile is much simpler than the one for the movieplex7 app, using a single-stage build. When it runs, it will start a simple Node server that serves the React pages, and exposes them on port 3000. We’ll deploy it in the next section.
