@@ -1,6 +1,6 @@
 # Modernizing Traditional Java Applications
 
-In this Hands-on Lab, we will show you how to take a traditional Java EE app, and compile it to run in a lightweight Java container. The app we’ve chosen is an old Java EE demo called Movie Plex 7 that was originally written to run in Wildfly 3. You can find our fork of the repo in our javaee-demo repository on GitHub. In fact, if you were to take that repository, and lift the movieplex7-1.0-SNAPSHOT file, you could run that in a Java Application Server, such as WebLogic, Wildfly, or WebSphere.
+In this Hands-on Lab, we will show you how to take a traditional Java EE app, and compile it to run in a lightweight Java container. The app we’ve chosen is an old Java EE demo called MoviePlex 7 that was originally written to run in Wildfly 3. You can find our fork of the repo in our javaee-demo repository on GitHub. In fact, if you were to take that repository, and lift the movieplex7-1.0-SNAPSHOT file, you could run that in a Java Application Server, such as WebLogic, Wildfly, or WebSphere.
 
 # Table of Contents
 
@@ -23,6 +23,10 @@ There are three main components to the Play With Docker (PWD) interface.
 In this section of the lab, you are going to take a Java EE web app running on Wildfly, move it to Tomcat EE, and run it in a Docker container.
 
 The easiest way to move an enterprise Java app into Docker is create a WAR file and deploy it to the app server.
+
+In the Docker Enterpise Edtion panel, click on `manager1` to get the manager window. 
+
+![](./mta-java/images/pwd_manager.png)
 
 Clone the lab repo into the PWD lab. Remember, you can click the command or manually type it into the terminal window.
 
@@ -53,7 +57,16 @@ The first part of the Dockerfile uses a maven container to build the war file. I
 
 There are a few additional commands to expose the ports and start Wildfly.
 
-Here’s how to build the app:
+
+First, set an environment variable `DTR_HOST` using the DTR host name defined on your Play with Docker landing page:
+
+	```bash
+	$ export DTR_HOST=<dtr hostname>
+	$ echo $DTR_HOST
+	```
+
+Next, here's how to build the app:
+
 ```
 cd movieplex7
 docker image build -t movieplex7 -f Dockerfile.wildfly .
