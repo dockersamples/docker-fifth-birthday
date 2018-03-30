@@ -58,7 +58,9 @@ The first part of the Dockerfile uses a maven container to build the war file. I
 There are a few additional commands to expose the ports and start Wildfly.
 
 
-First, set an environment variable `DTR_HOST` using the DTR host name defined on your Play with Docker landing page:
+First, set an environment variable `DTR_HOST` using the DTR host name defined on your Play with Docker landing page. You'll find the `DTR` host address in the PWD window.
+
+![](./mta-java/images/session-information.png) 
 
 	```bash
 	$ export DTR_HOST=<dtr hostname>
@@ -93,23 +95,32 @@ One of the big advantages of containers is that they can ease the process of upd
 React Client
 In this section, you will update the Movie Plex 7 application by adding more attributes to the movie entity and also updating the presentation layer by writing a new client using React. Don’t worry, all the code is provided, you don’t need to know React.
 
-As you saw earlier, the JavaServer Faces client was rather sparse and old-fashioned looking. You want to make the movie listing to include movie posters as well as more information about each movie. To do that, you will add a few attributes to the Movie entity, and include a path to a movie poster, and more information about the cast and the movie rating.
+As you saw earlier, the Java Server Faces client was rather sparse and old-fashioned looking. You want to make the movie listing to include movie posters as well as more information about each movie. To do that, you will add a few attributes to the Movie entity, and include a path to a movie poster, and more information about the cast and the movie rating.
 
-The Movie Plex 7 application includes a REST interface for querying movies. This simplifies writing a new client because you can use the API and get data via REST. The javaScript client is a bit more descriptive than the original JavaServer Faces client.
+The Movie Plex 7 application includes a REST interface for querying movies. This simplifies writing a new client because you can use the API and get data via REST. The javascript client is a bit more descriptive than the original Java Server Faces client.
 
 ![React Client](./mta-java/images/react-movieplex7-2.png)
 
-To get a separation of the new client from the existing client and server, you will deploy the React client in a separate container.
-
-To get ready, stop and remove the running container, and then change the directory from movieplex7 to the root of the project. Due to a quirk in how React is built, and the base url of the Play with Docker lab, before you build the React client you need to run a script to inject the host URL into the Dockerfile:
+In order to separate the new client from the existing client and server, you will deploy the React client in a separate container. To get ready to build the React client, stop and remove the running container, and then change the directory from movieplex7 to the root of the project.
 
 ```
 docker container stop movieplex7
 docker container rm movieplex7
 cd ..
-more react-client/Dockerfile
+```
 
+Due to a quirk in how React is built, and the base url of the Play with Docker lab, before you build the React client you need to run a script to inject the host URL into the Dockerfile. 
+
+```
 ./add_ee_kube_pwd_host.sh
+cat ./react-client/Dockerfile
+```
+
+You should see something similar to the example below on the second line of the Dockerfile.
+
+```
+FROM node:latest AS build
+API_HOST=ip172-18-0-8-baug157oeapg00e0p4hg.direct.ee-beta2.play-with-docker.com:8080
 ```
 
 React uses Node.js to build a static site for the interface. The Dockerfile is much simpler than the one for the movieplex7 app, using a single-stage build. When it runs, it will start a simple Node server that serves the React pages, and exposes them on port 3000. We’ll deploy it in the next section.
@@ -180,7 +191,7 @@ In a production environment we want to be able to control access to resources su
 Login into DTR and push the images. The DTR repository hostname is in the Session Information panel.
 
 ```
-docker login ip172-18-0-22-bahe6raubbhg0095k710.direct.ee-beta2.play-with-docker.com
+docker login $DTR_HOST
 Username: admin
 Password:
 Login Succeeded
@@ -190,8 +201,8 @@ Login Succeeded
 Tag the images with the DTR hostname and account name, i.e. admin, to register them.
 
 ```
-docker image tag movieplex7-tomee ip172-18-0-22-bahe6raubbhg0095k710.direct.ee-beta2.play-with-docker.com/admin/movieplex7-tomee
-docker image tag react-client ip172-18-0-22-bahe6raubbhg0095k710.direct.ee-beta2.play-with-docker.com/admin/react-client
+docker image tag movieplex7-tomee $DTR_HOST/admin/movieplex7-tomee
+docker image tag react-client $DTR_HOST/admin/react-client
 ```
 
 Next we'll create an empty repository for each of the images. First click on the `DTR` button the left side bar and log into DTR using the credentials in the Session Information panel.
@@ -203,8 +214,8 @@ To create a new repository click on `Repositories` on the left panel and click o
 Push the images to DTR from the command line:
 
 ```
-docker image push ip172-18-0-22-bahe6raubbhg0095k710.direct.ee-beta2.play-with-docker.com/admin/react-client
-docker image push  ip172-18-0-22-bahe6raubbhg0095k710.direct.ee-beta2.play-with-docker.com/admin/movieplex7-tomee
+docker image push $DTR_HOST/admin/react-client
+docker image push  $DTR_HOST/admin/movieplex7-tomee
 ```
 
 ![Images in DTR](./mta-java/images/dtr_images.png)
@@ -259,7 +270,7 @@ spec:
     spec:
       containers:
       - name: movieplex7
-        image: < DTR address >/admin/movieplex7-tomee:latest
+        image: <DTR HOST>/admin/movieplex7-tomee:latest
         ports:
         - containerPort: 8080
           hostPort: 8080
@@ -300,7 +311,7 @@ spec:
     spec:
       containers:
       - name: react-client
-        image: < DTR address >/admin/react-client:latest
+        image: <DTR HOST>/admin/react-client:latest
         ports:
         - containerPort: 80
           hostPort: 80
