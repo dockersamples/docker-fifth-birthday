@@ -175,6 +175,8 @@ docker image build -t react-client .
 
 Now that the images are built, we'll push them into Docker Trusted Registry (DTR). DTR Docker Trusted Registry (DTR) is the enterprise-grade image storage solution from Docker. You install it behind your firewall so that you can securely store and manage the Docker images you use in your applications and to make them available on Docker Universal Control Plane (UCP).  UCP is the enterprise-grade cluster management solution from Docker and it helps you manage your Docker swarm and applications through a single interface.
 
+In a production environment we want to be able to control access to resources such as images, networks and storage. Docker Enterprise Edition implements Role Based Access Control (RBAC) which determines who gets access to a resource, what level of access (create, change, run, delete), and provides a way to enforce access within your environment. To learn more about RBAC, check out the [access control documentation](https://docs.docker.com/datacenter/ucp/2.2/guides/access-control/) and an [example use case](https://success.docker.com/article/rbac-example-overview).
+
 Login into DTR and push the images. The DTR repository hostname is in the Session Information panel.
 
 ```
