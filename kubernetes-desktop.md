@@ -167,11 +167,14 @@ Of note is that the database service is a headless service set by `clusterIp: No
 The database Deployment declares the desired state of the pod backing the Service.
 
 ```
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: db
 spec:
+  selector:
+    matchLabels:
+      app: db
   template:
     metadata:
       labels:
@@ -217,13 +220,16 @@ spec:
   selector:
     app: vote
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vote
   labels:
     app: vote
 spec:
+  selector:
+    matchLabels:
+      app: vote
   replicas: 2
   template:
     metadata:

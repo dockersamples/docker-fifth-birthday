@@ -14,7 +14,7 @@ spec:
   selector: 
     app: redis
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
@@ -54,11 +54,14 @@ spec:
   selector: 
     app: db
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: db
 spec:
+  selector:
+    matchLabels:
+      app: db
   template:
     metadata:
       labels:
@@ -99,13 +102,16 @@ spec:
   selector:
     app: result
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: result
   labels:
     app: result
 spec:
+  selector:
+    matchLabels:
+      app: result
   replicas: 1
   template:
     metadata:
@@ -135,13 +141,16 @@ spec:
   selector:
     app: vote
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vote
   labels:
     app: vote
 spec:
+  selector:
+    matchLabels:
+      app: vote
   replicas: 2
   template:
     metadata:
@@ -168,13 +177,16 @@ spec:
   selector: 
     app: worker
 --- 
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata: 
   labels: 
     app: worker
   name: worker
 spec: 
+  selector:
+    matchLabels:
+      app: worker
   replicas: 1
   template: 
     metadata: 
