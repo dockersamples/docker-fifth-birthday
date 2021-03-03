@@ -88,7 +88,7 @@ kind: Service
 metadata:
   name: result
   labels:
-    app: result
+    app: "result"
 spec:
   type: LoadBalancer
   ports:
